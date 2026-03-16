@@ -6,6 +6,7 @@ let gameActive = false;      // Tracks if game is currently running
 let spawnInterval;          // Holds the interval for spawning items
 let timer = 30;             // Timer in seconds
 let timerInterval;          // Holds the interval for timer countdown
+let canWasMissed = false;    // Tracks whether the current can was not clicked
 
 const winningMessages = [
   'Great job! You kept the village hydrated!',
@@ -37,6 +38,13 @@ createGrid();
 function spawnWaterCan() {
   if (!gameActive) return; // Stop if the game is not active
   const cells = document.querySelectorAll('.grid-cell');
+
+  // If the previous can was not clicked before respawn, apply a miss penalty.
+  if (canWasMissed) {
+    currentCans = Math.max(0, currentCans - 1);
+    const scoreDisplay = document.getElementById('current-cans');
+    if (scoreDisplay) scoreDisplay.textContent = currentCans;
+  }
   
   // Clear all cells before spawning a new water can
   cells.forEach(cell => (cell.innerHTML = ''));
@@ -50,6 +58,7 @@ function spawnWaterCan() {
       <div class="water-can"></div>
     </div>
   `;
+  canWasMissed = true;
 
   // Add click event to the water can for +1 point
   const waterCan = randomCell.querySelector('.water-can');
@@ -57,6 +66,7 @@ function spawnWaterCan() {
     waterCan.addEventListener('click', function handleCanClick(e) {
       // Prevent multiple clicks on the same can
       if (!gameActive) return;
+      canWasMissed = false;
       currentCans += 1; // Increment score
       // Optionally update score display if present
       const scoreDisplay = document.getElementById('current-cans');
@@ -74,6 +84,7 @@ function startGame() {
   if (gameActive) return; // Prevent starting a new game if one is already active
   gameActive = true;
   currentCans = 0;
+  canWasMissed = false;
   timer = 30; // Reset timer
   createGrid(); // Set up the game grid
   const scoreDisplay = document.getElementById('current-cans');
