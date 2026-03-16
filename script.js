@@ -120,5 +120,26 @@ function endGame() {
   }
 }
 
+function resetGame() {
+  gameActive = false;
+  canWasMissed = false;
+  clearInterval(spawnInterval);
+  clearInterval(timerInterval);
+
+  currentCans = 0;
+  timer = 30;
+  createGrid();
+
+  const scoreDisplay = document.getElementById('current-cans');
+  if (scoreDisplay) scoreDisplay.textContent = currentCans;
+
+  const timerDisplay = document.getElementById('timer');
+  if (timerDisplay) timerDisplay.textContent = timer;
+
+  const achievements = document.getElementById('achievements');
+  if (achievements) achievements.textContent = '';
+}
+
 // Set up click handler for the start button
 document.getElementById('start-game').addEventListener('click', startGame);
+document.getElementById('reset-game').addEventListener('click', resetGame);
