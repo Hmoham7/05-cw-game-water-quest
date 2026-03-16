@@ -1,10 +1,23 @@
 // Game configuration and state variables
 const GOAL_CANS = 25;        // Total items needed to collect
+const WIN_THRESHOLD = 20;    // Minimum score needed to win
 let currentCans = 0;         // Current number of items collected
 let gameActive = false;      // Tracks if game is currently running
 let spawnInterval;          // Holds the interval for spawning items
 let timer = 30;             // Timer in seconds
 let timerInterval;          // Holds the interval for timer countdown
+
+const winningMessages = [
+  'Great job! You kept the village hydrated!',
+  'Victory! You crushed the water quest!',
+  'Awesome work! Mission complete!'
+];
+
+const losingMessages = [
+  'Nice try! Play again and collect a few more cans!',
+  'So close. Try again and beat your score!',
+  'Keep going! You can reach 20 next round!'
+];
 
 // Creates the 3x3 game grid where items will appear
 function createGrid() {
@@ -46,7 +59,7 @@ function spawnWaterCan() {
       if (!gameActive) return;
       currentCans += 1; // Increment score
       // Optionally update score display if present
-      const scoreDisplay = document.getElementById('score');
+      const scoreDisplay = document.getElementById('current-cans');
       if (scoreDisplay) {
         scoreDisplay.textContent = currentCans;
       }
@@ -60,8 +73,13 @@ function spawnWaterCan() {
 function startGame() {
   if (gameActive) return; // Prevent starting a new game if one is already active
   gameActive = true;
+  currentCans = 0;
   timer = 30; // Reset timer
   createGrid(); // Set up the game grid
+  const scoreDisplay = document.getElementById('current-cans');
+  if (scoreDisplay) scoreDisplay.textContent = currentCans;
+  const achievements = document.getElementById('achievements');
+  if (achievements) achievements.textContent = '';
   spawnInterval = setInterval(spawnWaterCan, 1000); // Spawn water cans every second
   // Start timer countdown
   const timerDisplay = document.getElementById('timer');
@@ -76,9 +94,19 @@ function startGame() {
 }
 
 function endGame() {
+  if (!gameActive) return;
   gameActive = false; // Mark the game as inactive
   clearInterval(spawnInterval); // Stop spawning water cans
   clearInterval(timerInterval); // Stop timer countdown
+
+  const messagePool = currentCans >= WIN_THRESHOLD ? winningMessages : losingMessages;
+  const randomMessage = messagePool[Math.floor(Math.random() * messagePool.length)];
+  const achievements = document.getElementById('achievements');
+  if (achievements) {
+    achievements.textContent = randomMessage;
+  } else {
+    alert(randomMessage);
+  }
 }
 
 // Set up click handler for the start button
