@@ -45,3 +45,15 @@ These are the minimum requirements, but if you'd like an additional challenge go
 
 If you have any questions or need any assistance with your code, reach out to the HelpHub or attend a Drop-In Hour. You got this!!
 
+What was done today:
+
+
+Recap: This project is a fun interactive charity water game meant to expose users to what charity water is: hence the link at the bottom of the page.
+The goal of the game is to click on as many jarrycans as possible within the specified time limit (30 seconds total with a threshhold of 20 jarrycans needed to win).
+
+Technologies:
+-script 
+-HTML
+-Jscript
+
+Inspected the page to discover if any errors exist, found that there was a 404 error which was fixable by including a link in the html with 
